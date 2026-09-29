@@ -1,0 +1,290 @@
+/* ============ Editor (CodeMirror) ============ */
+.editor-host {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  font-size: var(--editor-font-size);
+}
+
+.editor-host .cm-editor {
+  height: 100%;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.editor-host .cm-editor.cm-focused {
+  outline: none;
+}
+
+.editor-host .cm-scroller {
+  font-family: var(--font-mono);
+  line-height: 1.55;
+  padding-bottom: 24px;
+}
+
+/* Gutter：与编辑器底色有极细微区别 */
+.editor-host .cm-gutters {
+  background: var(--surface-elevated);
+  border-right: 1px solid var(--border);
+  color: var(--text-tertiary);
+  font-size: 11.5px;
+}
+
+:root[data-theme='dark'] .editor-host .cm-gutters {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.editor-host .cm-lineNumbers .cm-gutterElement {
+  padding: 0 10px 0 14px;
+  min-width: 44px;
+  font-variant-numeric: tabular-nums;
+}
+
+.editor-host .cm-content {
+  padding-left: 12px;
+}
+
+.editor-host .cm-activeLineGutter {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.editor-host .cm-activeLine {
+  background: rgba(128, 128, 128, 0.05);
+}
+
+:root[data-theme='dark'] .editor-host .cm-activeLine {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.editor-host .cm-cursor {
+  border-left-color: var(--accent);
+  border-left-width: 2px;
+}
+
+.editor-host .cm-selectionBackground,
+.editor-host .cm-editor ::selection {
+  background: rgba(0, 122, 255, 0.2) !important;
+}
+
+:root[data-theme='dark'] .editor-host .cm-selectionBackground,
+:root[data-theme='dark'] .editor-host .cm-editor ::selection {
+  background: rgba(10, 132, 255, 0.38) !important;
+}
+
+.editor-host .cm-selectionMatch {
+  background: rgba(128, 128, 128, 0.12);
+}
+
+/* Search panel */
+.editor-host .cm-panels {
+  background: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--border);
+  z-index: 50;
+}
+
+.editor-host .cm-panel.cm-search {
+  padding: 8px 10px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+}
+
+.editor-host .cm-panel.cm-search input[type='text'] {
+  background: var(--surface-inset);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  padding: 3px 8px;
+  font-size: 12.5px;
+  font-family: var(--font-sans);
+  margin-right: 6px;
+}
+
+.editor-host .cm-panel.cm-search input:focus-visible {
+  outline: 1.5px solid var(--accent);
+}
+
+.editor-host .cm-panel.cm-search button {
+  background: var(--active-fill);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-s);
+  font-size: 12px;
+  padding: 3px 10px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.editor-host .cm-panel.cm-search button:hover {
+  background: var(--hover);
+}
+
+.editor-host .cm-panel.cm-search label {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* Syntax token colours */
+.tok-keyword { color: var(--tok-keyword); }
+.tok-string { color: var(--tok-string); }
+.tok-number { color: var(--tok-number); }
+.tok-comment { color: var(--tok-comment); font-style: italic; }
+.tok-property { color: var(--tok-property); }
+.tok-fn { color: var(--tok-fn); }
+.tok-operator { color: var(--tok-operator); }
+.tok-bool { color: var(--tok-atom); }
+.tok-atom { color: var(--tok-atom); }
+.tok-tag { color: var(--tok-tag); }
+.tok-type { color: var(--tok-type); }
+.tok-escape { color: var(--tok-atom); }
+
+/* ============ Pane header（编辑器头） ============ */
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+}
+
+.pane-header {
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-2) 0 var(--sp-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.pane-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.pane-filename {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 1px 7px;
+  background: var(--surface-inset);
+  border-radius: 5px;
+}
+
+.pane-header .icon-btn {
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+}
+
+.pane-header .icon-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.pane-header .icon-btn + .icon-btn {
+  margin-left: 0;
+}
+
+.pane.dropping::after,
+.page.dropping::after {
+  content: '松开以打开文件';
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border: 1.5px dashed var(--accent);
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+.page.dropping::after {
+  border-radius: var(--radius-l);
+}
+
+/* ============ Splitter ============ */
+.splitter {
+  width: 9px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.splitter::after {
+  content: '';
+  width: 1px;
+  background: var(--border);
+  transition: background-color var(--dur-1) var(--ease), width var(--dur-1) var(--ease);
+}
+
+.splitter:hover::after,
+.splitter.dragging::after {
+  width: 2px;
+  background: var(--accent);
+}
+
+/* ============ Empty state（覆盖在真实编辑器上，除按钮外全部点击穿透） ============ */
+.empty-state {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  pointer-events: none;
+}
+
+.empty-state .btn {
+  pointer-events: auto;
+}
+
+.empty-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-inset);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.empty-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--text-tertiary);
+}
+
+.empty-text {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.empty-caption {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: -6px;
+}
+
+.empty-actions {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-1);
+}

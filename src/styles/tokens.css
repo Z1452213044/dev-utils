@@ -1,0 +1,172 @@
+/* ============================================================
+   Design Tokens V2 — Apple-flavoured, low-noise, developer-first
+   命名体系：--app-bg / --sidebar-bg / --surface / --surface-elevated /
+   --border / --text-primary|secondary|tertiary / --accent / --selected …
+   ============================================================ */
+
+:root {
+  /* Typography — 中文优先的字体栈 */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC',
+    'Microsoft YaHei', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas,
+    'Liberation Mono', 'Cascadia Mono', monospace;
+
+  /* Spacing rhythm (4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* Radius：6 / 8 / 10 / 14 / 16 */
+  --radius-s: 6px;
+  --radius-m: 8px;
+  --radius: 10px;
+  --radius-l: 14px;
+  --radius-xl: 16px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.25, 0.8, 0.35, 1);
+  --dur-1: 120ms;
+  --dur-2: 180ms;
+  --dur-3: 220ms;
+
+  /* Layout */
+  --sidebar-w: 224px;
+  --sidebar-w-collapsed: 60px;
+  --toolbar-h: 46px;
+  --content-max: 1520px;
+
+  /* Editor */
+  --editor-font-size: 13px;
+}
+
+/* ---------------- Light theme ---------------- */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --app-bg: #f7f7f8;
+  --sidebar-bg: #f0f0f2;
+  --surface: #ffffff;
+  --surface-elevated: #fafafa;
+  --surface-inset: #f4f4f6;
+  --hover: rgba(0, 0, 0, 0.045);
+  --selected: rgba(0, 0, 0, 0.06);
+  --active-fill: rgba(0, 0, 0, 0.07);
+
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #a1a1a6;
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.14);
+
+  --accent: #0071e3;
+  --accent-soft: rgba(0, 113, 227, 0.1);
+  --accent-text: #0071e3;
+  --on-accent: #ffffff;
+
+  --shadow-pop: 0 0 0 0.5px rgba(0, 0, 0, 0.06), 0 6px 24px rgba(0, 0, 0, 0.13),
+    0 2px 8px rgba(0, 0, 0, 0.07);
+  --shadow-surface: 0 0 0 0.5px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-thumb: 0 1px 2px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.12);
+
+  /* Diff — 低饱和 */
+  --diff-added: rgba(52, 168, 83, 0.13);
+  --diff-added-strong: rgba(52, 168, 83, 0.34);
+  --diff-deleted: rgba(214, 69, 57, 0.1);
+  --diff-deleted-strong: rgba(214, 69, 58, 0.24);
+  --diff-add-fg: #1e7f3c;
+  --diff-del-fg: #b3372e;
+  --diff-mod-fg: #9a6700;
+
+  /* Syntax */
+  --tok-keyword: #ad3da4;
+  --tok-string: #1d7a34;
+  --tok-number: #1c5fa8;
+  --tok-comment: #a1a1a6;
+  --tok-property: #9d4f1d;
+  --tok-fn: #4256b8;
+  --tok-operator: #6e6e73;
+  --tok-atom: #8f5db0;
+  --tok-tag: #b3372e;
+  --tok-type: #246b6b;
+
+  /* Scrollbar */
+  --sb-thumb: rgba(0, 0, 0, 0.22);
+  --sb-thumb-hover: rgba(0, 0, 0, 0.34);
+
+  /* Toast */
+  --toast-bg: rgba(28, 28, 30, 0.92);
+  --toast-fg: #f5f5f7;
+}
+
+/* ---------------- Dark theme（独立设计，非反色） ---------------- */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --app-bg: #131315;
+  --sidebar-bg: #17171a;
+  --surface: #1e1e21;
+  --surface-elevated: #242428;
+  --surface-inset: #19191c;
+  --hover: rgba(255, 255, 255, 0.055);
+  --selected: rgba(255, 255, 255, 0.08);
+  --active-fill: rgba(255, 255, 255, 0.09);
+
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-tertiary: #6e6e73;
+
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --accent: #0a84ff;
+  --accent-soft: rgba(10, 132, 255, 0.15);
+  --accent-text: #6db2ff;
+  --on-accent: #ffffff;
+
+  --shadow-pop: 0 0 0 0.5px rgba(255, 255, 255, 0.1), 0 8px 28px rgba(0, 0, 0, 0.55),
+    0 2px 10px rgba(0, 0, 0, 0.4);
+  --shadow-surface: 0 0 0 0.5px rgba(255, 255, 255, 0.05), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-thumb: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+  --diff-added: rgba(63, 185, 96, 0.15);
+  --diff-added-strong: rgba(63, 185, 96, 0.4);
+  --diff-deleted: rgba(239, 90, 83, 0.12);
+  --diff-deleted-strong: rgba(239, 90, 83, 0.28);
+  --diff-add-fg: #6ccb7f;
+  --diff-del-fg: #e07b72;
+  --diff-mod-fg: #d9a94e;
+
+  --tok-keyword: #e58adf;
+  --tok-string: #7ec699;
+  --tok-number: #79b8ff;
+  --tok-comment: #6e6e73;
+  --tok-property: #e8a064;
+  --tok-fn: #93a6f0;
+  --tok-operator: #a1a1a6;
+  --tok-atom: #c49ae0;
+  --tok-tag: #e07b72;
+  --tok-type: #6bc4c4;
+
+  --sb-thumb: rgba(255, 255, 255, 0.18);
+  --sb-thumb-hover: rgba(255, 255, 255, 0.3);
+
+  --toast-bg: rgba(58, 58, 62, 0.96);
+  --toast-fg: #f5f5f7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

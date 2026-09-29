@@ -1,0 +1,14 @@
+# 依赖与构建产物
+node_modules/
+dist/
+
+# 测试与调试产物
+.playwright-cli/
+shots/
+test-report.json
+mobile-interact-report.json
+*.log
+
+# 编辑器
+.vscode/
+.idea/

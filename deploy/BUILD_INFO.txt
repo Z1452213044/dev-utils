@@ -1,0 +1,10 @@
+DeveloperToolbox server package
+================================
+
+Source project: D:\WorkBuddy\个人\DeveloperToolbox
+Build date: 2026-09-24
+Default listen address: 0.0.0.0:8080
+Minimum Python version: 3.6
+
+This package was built from the production dist directory generated from the
+source project above. It does not contain source code or node_modules.
