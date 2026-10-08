@@ -10,6 +10,7 @@ import {
   Eraser,
   SlidersHorizontal,
   FileDiff,
+  Eye,
 } from 'lucide-react';
 import { EditorView } from '@codemirror/view';
 import { createEditor, languageFor, languageById, HIGHLIGHT_LANGUAGES } from '../../editor/cmSetup';
@@ -567,7 +568,7 @@ export default function DiffPage() {
 
   const stats = result?.stats;
   const identicalDocs = result != null && result.chunks.length === 0 && hasContent;
-  const optionsActive = opts.ignoreWhitespace || opts.ignoreCase || opts.trimLines || opts.hideUnchanged;
+  const optionsActive = opts.ignoreWhitespace || opts.ignoreCase || opts.trimLines;
 
   const paneHeader = (side: Side, title: string) => (
     <div className="pane-header">
@@ -641,6 +642,20 @@ export default function DiffPage() {
 
             <div className="toolbar-spacer" />
 
+            <button
+              className={`btn btn-ghost ${opts.hideUnchanged ? 'btn-toggle-on' : ''}`}
+              aria-pressed={opts.hideUnchanged}
+              aria-label="只查看 Diff"
+              title="隐藏未修改的行，只看有差异的部分（保留上下文 2 行）"
+              onClick={() => {
+                setOpts((o) => ({ ...o, hideUnchanged: !o.hideUnchanged }));
+                setTimeout(flushDiff, 0);
+              }}
+            >
+              <Eye style={{ width: 14, height: 14 }} />
+              只查看 Diff{opts.hideUnchanged ? '：开' : ''}
+            </button>
+
             <Tooltip label="上一个差异（Shift+F7）">
               <button
                 className="icon-btn"
@@ -695,7 +710,6 @@ export default function DiffPage() {
                   ['ignoreWhitespace', '忽略空白字符'],
                   ['ignoreCase', '忽略大小写'],
                   ['trimLines', '去除行首尾空格'],
-                  ['hideUnchanged', '隐藏未修改内容'],
                 ] as const
               ).map(([key, label]) => (
                 <div className="popover-row" key={key}>
