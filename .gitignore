@@ -8,6 +8,7 @@ shots/
 test-report.json
 mobile-interact-report.json
 *.log
+/*.png
 
 # 编辑器
 .vscode/
