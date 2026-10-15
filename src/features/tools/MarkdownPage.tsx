@@ -8,8 +8,17 @@ import { useToast } from '../../components/Toast';
 import { createEditor, languageFor } from '../../editor/cmSetup';
 import type { EditorHandle } from '../../editor/cmSetup';
 import { copyToClipboard, readTextFile, FILE_ACCEPT_ATTR } from '../../utils/clipboard';
+import { isMermaidLang, mermaidPlaceholderHtml, renderMermaidBlocks } from './mermaidSupport';
 
-marked.setOptions({ breaks: true, gfm: true });
+// ```mermaid 代码块 → 占位 div（DOMPurify 安全链路不变，SVG 在预览阶段懒加载渲染）
+const baseRenderer = new marked.Renderer();
+const fallbackCodeRenderer = baseRenderer.code.bind(baseRenderer);
+baseRenderer.code = (token) => {
+  if (isMermaidLang(token.lang)) return mermaidPlaceholderHtml(token.text);
+  return fallbackCodeRenderer(token);
+};
+
+marked.setOptions({ breaks: true, gfm: true, renderer: baseRenderer });
 
 export function renderMarkdown(src: string): string {
   const html = marked.parse(src, { async: false }) as string;
@@ -23,14 +32,52 @@ export default function MarkdownPage() {
   const handleRef = useRef<EditorHandle | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const syncingRef = useRef(false);
+  const mermaidTimerRef = useRef<number | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [empty, setEmpty] = useState(true);
 
-  const renderPreview = useCallback((src: string) => {
-    const html = renderMarkdown(src);
-    if (previewRef.current) previewRef.current.innerHTML = html;
-    setEmpty(src.trim() === '');
+  // 打字过程中不逐帧渲染图表，停手 300ms 后再画
+  const scheduleMermaid = useCallback((root: HTMLElement | null) => {
+    if (mermaidTimerRef.current !== null) window.clearTimeout(mermaidTimerRef.current);
+    mermaidTimerRef.current = window.setTimeout(() => {
+      mermaidTimerRef.current = null;
+      void renderMermaidBlocks(root);
+    }, 300);
   }, []);
+
+  const renderPreview = useCallback(
+    (src: string) => {
+      const html = renderMarkdown(src);
+      const preview = previewRef.current;
+      if (preview) {
+        preview.innerHTML = html;
+        scheduleMermaid(preview);
+      }
+      setEmpty(src.trim() === '');
+    },
+    [scheduleMermaid],
+  );
+
+  // 主题切换后按新配色重画图
+  useEffect(() => {
+    const root = document.documentElement;
+    let last = root.getAttribute('data-theme');
+    const observer = new MutationObserver(() => {
+      const now = root.getAttribute('data-theme');
+      if (now === last) return;
+      last = now;
+      scheduleMermaid(previewRef.current);
+    });
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+  }, [scheduleMermaid]);
+
+  useEffect(
+    () => () => {
+      if (mermaidTimerRef.current !== null) window.clearTimeout(mermaidTimerRef.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!hostRef.current) return;
@@ -152,7 +199,7 @@ export default function MarkdownPage() {
         </div>
 
         <div className="status-bar">
-          <span>GFM · 安全过滤（脚本不执行）</span>
+          <span>GFM · Mermaid 图 · 安全过滤（脚本不执行）</span>
           <div className="toolbar-spacer" />
           <span>本地渲染</span>
         </div>

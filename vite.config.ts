@@ -3,6 +3,38 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// mermaid 独有依赖（dompurify / marked 与应用共用，不能进这个 chunk，否则会破坏懒加载）
+const MERMAID_ONLY_DEPS = [
+  '@mermaid-js',
+  '@braintree',
+  '@iconify',
+  '@upsetjs',
+  'chevrotain',
+  'cytoscape',
+  'cose-base',
+  'dagre-d3-es',
+  'dagre',
+  'dayjs',
+  'delaunator',
+  'd3',
+  'elkjs',
+  'es-toolkit',
+  'internmap',
+  'katex',
+  'khroma',
+  'langium',
+  'layout-base',
+  'mdast-util',
+  'points-on-curve',
+  'points-on-path',
+  'robust-predicates',
+  'roughjs',
+  'stylis',
+  'ts-dedent',
+  'uuid',
+  'web-worker',
+];
+
 export default defineConfig({
   plugins: [
     react(),
@@ -31,6 +63,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // mermaid 是按需加载的重型 chunk（>2MiB 超出 workbox 预缓存上限），
+        // 不预缓存：离线时图表降级为源码展示，其余功能不受影响。
+        globIgnores: ['**/mermaid-*.js'],
         navigateFallback: '/index.html',
       },
     }),
@@ -43,10 +78,14 @@ export default defineConfig({
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
-        // 三方依赖分包：CodeMirror 体积最大单独拆，其余 vendor 一组，应用代码保持独立
+        // 三方依赖分包：CodeMirror 单独拆，mermaid 单独拆（按需加载，不进主链路），
+        // 其余 vendor 一组，应用代码保持独立
         manualChunks(id) {
           if (!id.includes('node_modules')) return undefined;
-          if (id.includes('@codemirror') || id.includes('@lezer')) return 'codemirror';
+          const path = id.replace(/\\/g, '/');
+          if (path.includes('@codemirror') || path.includes('@lezer')) return 'codemirror';
+          if (path.includes('/node_modules/mermaid')) return 'mermaid';
+          if (MERMAID_ONLY_DEPS.some((dep) => path.includes(`/node_modules/${dep}`))) return 'mermaid';
           return 'vendor';
         },
       },
